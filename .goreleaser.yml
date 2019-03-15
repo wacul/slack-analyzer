@@ -1,0 +1,43 @@
+project_name: slack-stamps
+release:
+  github:
+    owner: wacul
+    name: slack-stamps
+brew:
+  install: |
+    bin.install "slack-stamps"
+    man1.install "slack-stamps.1"
+  github:
+    owner: wacul
+    name: homebrew-tap
+  folder: Formula
+  homepage: https://github.com/wacul/slack-stamps
+  description: Count all stamps in slack.
+builds:
+- goos:
+  - linux
+  - darwin
+  - windows
+  goarch:
+  - amd64
+  - "386"
+  main: .
+  ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+  binary: slack-stamps
+  hooks:
+    pre: make man
+archive:
+  format: tar.gz
+  name_template: "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+  files:
+  - licence*
+  - LICENCE*
+  - license*
+  - LICENSE*
+  - readme*
+  - README*
+  - changelog*
+  - CHANGELOG*
+  - slack-stamps.1
+snapshot:
+  name_template: SNAPSHOT-{{ .Commit }}
