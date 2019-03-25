@@ -11,4 +11,5 @@ require (
 	github.com/nlopes/slack v0.5.0
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/stretchr/testify v1.3.0 // indirect
+	github.com/ymotongpoo/datemaki v0.0.0-20170903132816-ebdf2513fc43
 )
