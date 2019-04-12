@@ -23,6 +23,7 @@ func main() {
 	for _, f := range []func(*kingpin.Application) (string, func() error){
 		reaction,
 		word,
+		raw,
 	} {
 		key, run := f(app)
 		cmds[key] = run
@@ -80,5 +81,24 @@ func word(app *kingpin.Application) (string, func() error) {
 
 	return cmd.FullCommand(), func() error {
 		return commands.Word(slackToken, targetChannels, targetWord, eachReport, allReportChannel, oldest, latest)
+	}
+}
+
+func raw(app *kingpin.Application) (string, func() error) {
+	var (
+		slackToken    string
+		targetChannel string
+
+		oldest commands.DateTime
+		latest commands.DateTime
+	)
+	cmd := app.Command("raw", "Fetch raw messages")
+	cmd.Flag("slack-token", "Slack App OAuth App Token").Envar("SLACK_TOKEN").Required().StringVar(&slackToken)
+	cmd.Flag("channel", "Target channel").Required().StringVar(&targetChannel)
+	cmd.Flag("oldest", "A time of the oldest message that should be analyzed").Default(time.Now().Add(-7 * 24 * time.Hour).Format(commands.DateFormat)).SetValue(&oldest)
+	cmd.Flag("latest", "A time of the latest message that should be analyzed").Default(time.Now().Format(commands.DateFormat)).SetValue(&latest)
+
+	return cmd.FullCommand(), func() error {
+		return commands.Raw(slackToken, targetChannel, oldest, latest)
 	}
 }
